@@ -34,7 +34,7 @@ RUN poetry install --no-root
 COPY spam spam
 COPY bin bin
 COPY credentials /
-RUN dpkg --print-architecture | grep -q "amd64" && export SPAMHAMMER_ARCH="amd64" || export SPAMHAMMER_ARCH="arm64" && wget https://github.com/CSSE6400/SpamHammer/releases/download/v1.0.0/spamhammer-v1.0.0-linux-${SPAMHAMMER_ARCH} -O spam/spamhammer && chmod +x spam/spamhammer && chmod +x bin/docker-entrypoint
+RUN dpkg --print-architecture | grep -q "amd64" && export SPAMHAMMER_ARCH="amd64" || export SPAMHAMMER_ARCH="arm64" && wget https://github.com/86LAK/SpamHammer/releases/download/v1.0.0/spamhammer-v1.0.0-linux-${SPAMHAMMER_ARCH} -O spam/spamhammer && chmod +x spam/spamhammer && chmod +x bin/docker-entrypoint
 # Running our application
 ENTRYPOINT ["/app/bin/docker-entrypoint"]
 CMD ["serve"]

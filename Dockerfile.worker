@@ -11,6 +11,6 @@ RUN poetry install --no-root
 # Copying our application into the container
 COPY spamworker spamworker
 COPY credentials /
-RUN dpkg --print-architecture | grep -q "amd64" && export SPAMHAMMER_ARCH="amd64" || export SPAMHAMMER_ARCH="arm64" && wget https://github.com/CSSE6400/SpamHammer/releases/download/v1.0.0/spamhammer-v1.0.0-linux-${SPAMHAMMER_ARCH} -O spamworker/spamhammer && chmod +x spamworker/spamhammer
+RUN dpkg --print-architecture | grep -q "amd64" && export SPAMHAMMER_ARCH="amd64" || export SPAMHAMMER_ARCH="arm64" && wget https://github.com/86LAK/SpamHammer/releases/download/v1.0.0/spamhammer-v1.0.0-linux-${SPAMHAMMER_ARCH} -O spamworker/spamhammer && chmod +x spamworker/spamhammer
 # Running our application
 CMD ["poetry", "run", "python3", "spamworker/spamworker.py"]
