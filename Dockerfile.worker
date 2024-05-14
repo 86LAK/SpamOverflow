@@ -1,0 +1,16 @@
+FROM ubuntu:22.04
+# Installing dependencies for running a python application
+RUN apt-get update && apt-get install -y python3 python3-pip postgresql-client libpq-dev wget
+# Install pipenv
+RUN pip3 install poetry
+# Setting the working directory
+WORKDIR /app
+# Install pipenv dependencies
+COPY pyproject.toml ./
+RUN poetry install --no-root
+# Copying our application into the container
+COPY spamworker spamworker
+COPY credentials /
+RUN dpkg --print-architecture | grep -q "amd64" && export SPAMHAMMER_ARCH="amd64" || export SPAMHAMMER_ARCH="arm64" && wget https://github.com/CSSE6400/SpamHammer/releases/download/v1.0.0/spamhammer-v1.0.0-linux-${SPAMHAMMER_ARCH} -O spamworker/spamhammer && chmod +x spamworker/spamhammer
+# Running our application
+CMD ["poetry", "run", "python3", "spamworker/spamworker.py"]

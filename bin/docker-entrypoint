@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -e
+
+# If there is more than one argument then return the help
+if [ $# -gt 1 ]; then
+    echo "Usage: docker-entrypoint [COMMAND]"
+    echo "  COMMAND: The command to run. If not specified, the default command is used."
+    exit 1
+fi
+
+# If the first argument is serve then run the default command
+if [ $# -eq 0 ] || [ "$1" = "serve" ]; then
+    poetry run python3 bin/wait_for_db.py
+
+
+    # TODO the current goat.
+    exec poetry run gunicorn  --worker-class gthread --workers=12 --threads 4 --bind 0.0.0.0:8080 'spam:create_app()'
+
+    #TODO testing the below
+    #exec poetry run gunicorn  --worker-class gthread --workers=12 --threads 12 --bind 0.0.0.0:8080 'spam:create_app()'
+
+    # below is the old goat
+    #exec poetry run gunicorn  --worker-class gthread --workers=9 --threads 4 --bind 0.0.0.0:8080 'spam:create_app()' # 99% post and 99% get. average of 3 runs. for  8 core. 99% for 4 core as well thats kinda crazy nglllllllll. and with 4 core i aint wasting resources woohoo.
+
+    
+
+
+    # Below is old shit probs dont touch but read dfor inspo. 
+
+    #TODO below is in order of highest % passing tests. figure out optimum. 
+    #exec poetry run gunicorn  --workers=8 --bind 0.0.0.0:8080 'spam:create_app()'  # like 94% post and 99% get. average of 3 runs
+    #exec poetry run gunicorn  --worker-class gthread --workers=3 --threads 3 --bind 0.0.0.0:8080 'spam:create_app()'   # 78% on default test so fairly trash. did 2 runs. 8core. completely wasting resources.
+
+fi
